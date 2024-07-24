@@ -1,0 +1,11 @@
+{
+  "todo": [
+    {
+      "id": "1721635222930",
+      "content": "new todo",
+      "status": "todo"
+    }
+  ],
+  "inProgress": [],
+  "done": []
+}
