@@ -14,12 +14,21 @@ interface WorkItemProps {
 }
 
 function WorkItem({ item, onEdit, onDelete, onDragStart }: WorkItemProps) {
+
   const formatDescription = (description: string) => {
-    const parts = description.split(/(#\w+)/g);
-    return parts.map((part, index) =>
-      part.startsWith('#') ? <span key={index} className="bg-blue-100 text-blue-800 px-1 rounded">{part}</span> : part
-    );
+    return description.length > 100 ? description.substring(0, 65) + '...' : description;
   };
+
+  const formatTitle = (title: string) => {
+    return title.length > 30 ? title.substring(0, 30) + '...' : title;
+  }
+
+  const getTags = (description: string) => {
+    const parts = description.split(/(#\w+)/g);
+    const tags = parts.filter(part => part.startsWith('#'));
+    console.log('tags', tags.length)
+    return tags;
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -39,14 +48,13 @@ function WorkItem({ item, onEdit, onDelete, onDragStart }: WorkItemProps) {
     }
   };
 
-  console.log('item', item)
   return (
     <motion.div
       layout
-      initial={{ opacity: 0.8 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.2 }}
     >
       <Card
         className={`mb-2 ${item.case === 'WorkItem' ? 'cursor-grab' : 'cursor-default'}`}
@@ -55,7 +63,7 @@ function WorkItem({ item, onEdit, onDelete, onDragStart }: WorkItemProps) {
       >
         <CardContent className="p-2">
           <div className="flex justify-between items-center">
-            <div className="text-sm font-medium">{item.title}</div>
+            <div className="text-sm font-medium">{formatTitle(item.title)}</div>
             <div>
               {item.case === 'WorkItem' && (
                 <>
@@ -65,10 +73,9 @@ function WorkItem({ item, onEdit, onDelete, onDragStart }: WorkItemProps) {
               )}
               {item.case === 'Request' && (
                 <span className='flex text-sm items-center text-blue-600'>
-                <AlertCircle className="w-4 h-4 mx-2 text-blue-600"  />
-                {item?.requestId}
+                  <AlertCircle className="w-4 h-4 mx-2 text-blue-600" />
+                  {item?.requestId}
                 </span>
-                
               )}
             </div>
           </div>
@@ -84,6 +91,10 @@ function WorkItem({ item, onEdit, onDelete, onDragStart }: WorkItemProps) {
             <span className="px-2 py-1 text-sm md:text-xs rounded-full bg-blue-200 text-blue-600">
               {item.type}
             </span>
+            {getTags(item.description).length >= 1 && <span className="px-2 py-1 text-sm md:text-xs rounded-full bg-blue-200 text-blue-600">
+              {getTags(item.description).slice(0, 1).join(' ')}
+            </span>
+            }
             {item.upcomingDate && (
               <span className="px-2 py-1 text-sm md:text-xs rounded-full bg-green-200 text-green-600">
                 <Calendar className="w-3 h-3 inline-block mr-1" />

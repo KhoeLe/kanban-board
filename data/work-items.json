@@ -2,11 +2,12 @@
   {
     "id": 1,
     "title": "Create droppable to manage...",
-    "description": "Implement drag and drop #feature",
+    "description": "Implement drag and drop #feature [2024-06-20]\nImplement drag and drop #feature [2024-06-20]\nImplement drag and drop #feature [2024-06-20]\nImplement drag and drop #feature [2024-06-20]\nImplement drag and drop #feature [2024-06-20]\nImplement drag and drop #feature [2024-06-20]",
     "priority": "Normal",
     "type": "Feature",
     "status": "todo",
-     "case": "WorkItem"
+    "case": "WorkItem",
+    "upcomingDate": "2024-06-19T17:00:00.000Z"
   },
   {
     "id": 2,
@@ -15,7 +16,7 @@
     "priority": "Normal",
     "type": "Bug",
     "status": "todo",
-     "case": "WorkItem"
+    "case": "WorkItem"
   },
   {
     "id": 3,
@@ -24,7 +25,7 @@
     "priority": "High",
     "type": "Task",
     "status": "todo",
-     "case": "WorkItem"
+    "case": "WorkItem"
   },
   {
     "id": 4,
@@ -32,8 +33,8 @@
     "description": "",
     "priority": "Normal",
     "type": "Feature",
-    "status": "todo",
-     "case": "WorkItem"
+    "status": "rejected",
+    "case": "WorkItem"
   },
   {
     "id": 5,
@@ -41,8 +42,8 @@
     "description": "",
     "priority": "Normal",
     "type": "Feature",
-    "status": "todo",
-     "case": "WorkItem"
+    "status": "done",
+    "case": "WorkItem"
   },
   {
     "id": 6,
@@ -50,17 +51,17 @@
     "description": "",
     "priority": "High",
     "type": "Task",
-    "status": "inProgress",
-     "case": "WorkItem"
+    "status": "done",
+    "case": "WorkItem"
   },
   {
     "id": 7,
     "title": "build user route to seek approval...",
-    "description": "",
+    "description": "I have segments of text that I want to put into a fixed 80px width, and I'm looking for the best way to implement fall-back if they don't quite fit (they will all be very close so I expect spacing can be used to make corrections).\n\nI looked at the documentation for the textLength attribute but found it very hard to understand -- and the examples don't help at all. Specifying the pixel width on a text element garbles the text in Firefox and does nothing in my Chrome.\n\nAn article at More Robust SVG Text gave examples in 'em' units, but I haven't found any official documentation to explain why that works when pixels do not. Using that method helps in Firefox (although it's ignored on tspan), but is totally ignored in Chrome.\n\n",
     "priority": "High",
     "type": "Task",
     "status": "done",
-     "case": "WorkItem"
+    "case": "WorkItem"
   },
   {
     "id": 8,
@@ -69,7 +70,7 @@
     "priority": "Normal",
     "type": "Feature",
     "status": "done",
-     "case": "WorkItem"
+    "case": "WorkItem"
   },
   {
     "id": 9,
@@ -78,7 +79,7 @@
     "priority": "Normal",
     "type": "Task",
     "status": "done",
-     "case": "WorkItem"
+    "case": "WorkItem"
   },
   {
     "id": 10,
@@ -87,7 +88,7 @@
     "priority": "High",
     "type": "Feature",
     "status": "done",
-     "case": "WorkItem"
+    "case": "WorkItem"
   },
   {
     "id": 11,
@@ -96,7 +97,7 @@
     "priority": "High",
     "type": "Task",
     "status": "done",
-     "case": "WorkItem"
+    "case": "WorkItem"
   },
   {
     "id": 12,
@@ -105,7 +106,7 @@
     "priority": "High",
     "type": "Task",
     "status": "rejected",
-     "case": "WorkItem"
+    "case": "WorkItem"
   },
   {
     "id": 819,
@@ -114,62 +115,98 @@
     "priority": "Normal",
     "type": "Feature",
     "status": "done",
-     "case": "WorkItem"
-  },{
+    "case": "WorkItem"
+  },
+  {
     "id": 815,
     "title": "Build categories mange",
     "description": "",
     "priority": "Normal",
     "type": "Feature",
     "status": "done",
-     "case": "WorkItem"
-  },{
+    "case": "WorkItem"
+  },
+  {
     "id": 887,
     "title": "Build categories mange",
     "description": "",
     "priority": "Normal",
     "type": "Feature",
     "status": "done",
-     "case": "WorkItem"
-  },{
+    "case": "WorkItem"
+  },
+  {
     "id": 847,
     "title": "Build categories mange",
     "description": "",
     "priority": "Normal",
     "type": "Feature",
-    "status": "done",
-     "case": "WorkItem"
-  },{
+    "status": "rejected",
+    "case": "WorkItem"
+  },
+  {
     "id": 807,
     "title": "Build categories mange",
     "description": "",
     "priority": "Normal",
     "type": "Feature",
-    "status": "done",
-     "case": "WorkItem"
-  },{
+    "status": "rejected",
+    "case": "WorkItem"
+  },
+  {
     "id": 817,
     "title": "Build categories mange",
     "description": "",
     "priority": "Normal",
     "type": "Feature",
     "status": "done",
-     "case": "WorkItem"
-  },{
+    "case": "WorkItem"
+  },
+  {
     "id": 827,
     "title": "Build categories mange",
     "description": "",
     "priority": "Normal",
     "type": "Feature",
-    "status": "done",
-     "case": "WorkItem"
-  },{
+    "status": "rejected",
+    "case": "WorkItem"
+  },
+  {
     "id": 837,
     "title": "Build categories mange",
     "description": "",
     "priority": "Normal",
     "type": "Feature",
     "status": "done",
-     "case": "WorkItem"
+    "case": "WorkItem"
+  },
+  {
+    "id": 889,
+    "title": "new todo inprocess 88",
+    "description": "#feature\n[2024-08-22]",
+    "priority": "Normal",
+    "type": "Task",
+    "status": "done",
+    "case": "WorkItem",
+    "upcomingDate": "2024-08-21T17:00:00.000Z"
+  },
+  {
+    "id": 890,
+    "title": "new todo inprocess",
+    "description": "#bug\n[2024-08-24]",
+    "priority": "Normal",
+    "type": "Task",
+    "status": "done",
+    "case": "WorkItem",
+    "upcomingDate": "2024-08-23T17:00:00.000Z"
+  },
+  {
+    "id": 891,
+    "title": "https://keppel.csod.com/ui/lms-learning-details/app/event/6cd8dfdd-e785-4d3a-9175-2bb61ba409f4",
+    "description": "",
+    "priority": "Normal",
+    "type": "Task",
+    "status": "todo",
+    "case": "WorkItem"
   }
 ]

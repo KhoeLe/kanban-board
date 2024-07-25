@@ -1,14 +1,16 @@
 'use client'
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Search, Clock, User, Activity, Tag, Plus, ChevronDown } from 'lucide-react';
+import { Search, Clock, User, Activity, Tag, Plus, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { compareAsc } from 'date-fns';
 import Column, { WorkItemType } from '@/components/work-items/column';
 import WorkItemForm from '@/components/work-items/work-item-form';
 import useDebounce from '@/lib/use-debounce';
+import { ScrollArea } from '../ui/scroll-area';
+import { addWorkItem, removeWorkItem, updateWorkItem } from '../../../data/work-item';
 
 interface WorkItemBoardProps {
   workItemData: WorkItemType[];
@@ -21,7 +23,7 @@ function WorkItemsBoard({ workItemData, requestData }: WorkItemBoardProps) {
   const [editingItem, setEditingItem] = useState<WorkItemType | null>(null);
   const [draggedItem, setDraggedItem] = useState<WorkItemType | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const debouncedSearchTerm = useDebounce(searchTerm, 300); // 300ms delay
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const [collapsedColumns, setCollapsedColumns] = useState<Record<string, boolean>>({
     todo: false,
@@ -63,31 +65,38 @@ function WorkItemsBoard({ workItemData, requestData }: WorkItemBoardProps) {
       setItems(prevItems => prevItems.map(item =>
         item.id === draggedItem.id ? { ...item, status: newStatus } : item
       ));
+      updateWorkItem({ ...draggedItem, status: newStatus });
     }
     setDraggedItem(null);
   };
 
-  const handleAddOrUpdate = (itemData: WorkItemType) => {
+  const handleAddOrUpdate = async (itemData: WorkItemType) => {
     if (editingItem) {
-      setItems(prevItems =>
-        prevItems.map(item =>
-          item.id === editingItem.id ? { ...item, ...itemData } : item
-        )
-      );
+      // setItems(prevItems =>
+      //   prevItems.map(item =>
+      //     item.id === editingItem.id ? { ...item, ...itemData } : item
+
+      //   )
+      // );
+      await updateWorkItem(itemData);
+
     } else {
       const newItem: WorkItemType = {
         ...itemData,
         id: Math.max(...items.map(i => i.id), 0) + 1,
         case: 'WorkItem'
       };
-      setItems(prevItems => [...prevItems, newItem]);
+      // setItems(prevItems => [...prevItems, newItem]);
+
+      await addWorkItem(newItem);
     }
     setIsDialogOpen(false);
     setEditingItem(null);
   };
 
-  const handleDelete = (id: number) => {
-    setItems(prevItems => prevItems.filter(item => item.id !== id));
+  const handleDelete = async (id: number) => {
+    await removeWorkItem(id);
+    // setItems(prevItems => prevItems.filter(item => item.id !== id));
   };
 
   const openAddDialog = () => {
@@ -119,7 +128,7 @@ function WorkItemsBoard({ workItemData, requestData }: WorkItemBoardProps) {
       rejected: ['rejected'],
     };
 
-    return filteredItems.filter(item => 
+    return filteredItems.filter(item =>
       statusMapping[status].includes(item.status)
     ).slice(0, visibleItems[status]);
   }, [filteredItems, visibleItems]);
@@ -139,14 +148,15 @@ function WorkItemsBoard({ workItemData, requestData }: WorkItemBoardProps) {
         done: ['done', 'approved'],
         rejected: ['rejected'],
       };
-  
-      const totalItems = filteredItems.filter(item => 
+
+      const totalItems = filteredItems.filter(item =>
         statusMapping[status].includes(item.status)
       ).length;
-  
+
       return totalItems > visibleItems[status];
     }
-  ,[filteredItems, visibleItems]);
+    , [filteredItems, visibleItems]);
+
 
   const getColumnColor = (status: WorkItemType['status']) => {
     switch (status) {
@@ -165,6 +175,7 @@ function WorkItemsBoard({ workItemData, requestData }: WorkItemBoardProps) {
         return 'bg-gray-100';
     }
   };
+
 
   return (
     <div className="p-6">
@@ -202,32 +213,49 @@ function WorkItemsBoard({ workItemData, requestData }: WorkItemBoardProps) {
       </div>
       <div className="flex flex-col space-y-4 lg:space-y-0 lg:flex-row md:space-x-4">
         {['todo', 'inProgress', 'done', 'rejected'].map((status) => (
-          <div key={status} className="flex flex-col">
-            <h3 className={`text-lg font-semibold mb-2 w-full  p-2 rounded-lg lg:w-96 ${getColumnColor(status as WorkItemType['status'])}`} >
-              {status === 'todo' ? 'To Do' : status === 'inProgress' ? 'In Progress' : status === 'done' ? 'Done' : 'Rejected'}
+          <motion.div key={status} className="flex flex-col">
+            <h3 className={`flex flex-row justify-between text-lg font-semibold w-full p-2 rounded-t-xl lg:w-96 ${getColumnColor(status as WorkItemType['status'])}`} >
+              <div className='flex flex-col mb-4'>
+                {status === 'todo' ? 'To Do' : status === 'inProgress' ? 'In Progress' : status === 'done' ? 'Done' : 'Rejected'}
+                <span className="ml-2 text-sm font-normal text-gray-500">{getColumnItems(status as WorkItemType['status']).length}</span>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-1"
+                onClick={() => toggleColumnCollapse(status)}>
+                {collapsedColumns[status] ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
+              </Button>
             </h3>
-          <Column
-            title=""
-            items={getColumnItems(status as WorkItemType['status'])}
-            status={status as WorkItemType['status']}
-            onEdit={openEditDialog}
-            onDelete={handleDelete}
-            onDragStart={onDragStart}
-            onDragOver={onDragOver}
-            onDrop={onDrop}
-            isCollapsed={collapsedColumns[status]}
-            onToggleCollapse={() => toggleColumnCollapse(status)}
-          />
-          {hasMoreItems(status) && (
-            <Button 
-              variant="ghost" 
-              className="mt-2" 
-              onClick={() => loadMore(status)}
-            >
-              Load More <ChevronDown className="w-4 h-4 ml-2" />
-            </Button>
-          )}
-        </div>
+            <ScrollArea className='max-h-dvh'>
+              <AnimatePresence initial={false}>
+                <Column
+                  items={getColumnItems(status as WorkItemType['status'])}
+                  status={status as WorkItemType['status']}
+                  onEdit={openEditDialog}
+                  onDelete={handleDelete}
+                  onDragStart={onDragStart}
+                  onDragOver={onDragOver}
+                  onDrop={onDrop}
+                  isCollapsed={collapsedColumns[status]}
+                />
+              </AnimatePresence>
+            </ScrollArea>
+            {hasMoreItems(status) && (
+              <Button
+                variant="ghost"
+                className="mt-2"
+                onClick={() => {
+                  loadMore(status);
+                  toggleColumnCollapse(status);
+                }}
+                
+              >
+                Load More <ChevronDown className="w-4 h-4 ml-2" />
+              </Button>
+            )}
+           
+          </motion.div>
         ))}
       </div>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

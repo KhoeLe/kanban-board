@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import WorkItem from './work-item';
 import { Button } from '../ui/button';
 import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ScrollArea } from '../ui/scroll-area';
 
 export interface WorkItemType {
   id: number;
@@ -10,14 +11,13 @@ export interface WorkItemType {
   priority: 'High' | 'Normal';
   type: 'Task' | 'Bug' | 'Feature';
   status: 'todo' | 'pending' | 'inProgress' | 'requestPendingApproval' | 'done' | 'approved' | 'rejected';
-  case : 'Request' | 'WorkItem';
+  case: 'Request' | 'WorkItem';
   description: string;
   upcomingDate?: Date;
   requestId?: string
 }
 
 interface ColumnProps {
-  title: string;
   items: WorkItemType[];
   status: WorkItemType['status'];
   initialCollapsed?: boolean;
@@ -27,10 +27,9 @@ interface ColumnProps {
   onDragOver: (e: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (e: React.DragEvent<HTMLDivElement>, status: WorkItemType['status']) => void;
   isCollapsed: boolean;
-  onToggleCollapse: () => void;
 }
 
-function Column({ title, items, status, onEdit, onDelete, onDragStart, onDragOver, onDrop,isCollapsed ,onToggleCollapse}: ColumnProps) {
+function Column({  items, status, onEdit, onDelete, onDragStart, onDragOver, onDrop, isCollapsed }: ColumnProps) {
   const getColumnColor = (status: WorkItemType['status']) => {
     switch (status) {
       case 'todo':
@@ -50,31 +49,17 @@ function Column({ title, items, status, onEdit, onDelete, onDragStart, onDragOve
   };
 
   return (
-      <motion.div
-      className={`w-full  p-4 rounded-lg lg:w-96 ${getColumnColor(status)}`}
+    <motion.div
+      layout
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className={`w-full  p-4 rounded-b-xl lg:w-96 ${getColumnColor(status)}`}
       onDragOver={onDragOver}
       onDrop={(e) => onDrop(e, status)}
-      animate={{ 
-        height: isCollapsed ? '80px' : 'auto',
-        transition: { duration: 0.3 }
-      }}
-      layout
     >
-        
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">
-          {title} <span className="ml-2 text-sm font-normal text-gray-500">{items.length}</span>
-        </h3>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onToggleCollapse}
-          className="p-1"
-        >
-          {isCollapsed ? <ChevronDown size={20} /> : <ChevronUp size={20} />}
-        </Button>
-      </div>
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {!isCollapsed && (
           <motion.div
             layout
@@ -83,15 +68,17 @@ function Column({ title, items, status, onEdit, onDelete, onDragStart, onDragOve
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
           >
-            {items.map((item) => (
-              <WorkItem
-                key={item.id}
-                item={item}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onDragStart={onDragStart}
-              />
-            ))}
+            <AnimatePresence initial={false}>
+              {items.map((item) => (
+                <WorkItem
+                  key={item.id}
+                  item={item}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
+                  onDragStart={onDragStart}
+                />
+              ))}
+            </AnimatePresence>
             {items.length === 0 && (
               <motion.div
                 layout
